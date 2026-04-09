@@ -25,14 +25,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     setLoading(true);
 
+    let isInvalidToken = false;
+
     try {
       const res = await getUserFromToken(token);
       if (res) {
         setUser(res);
+      } else {
+        isInvalidToken = true;
       }
     } catch {
-      localStorage.removeItem(TOKEN_KEY);
+      isInvalidToken = true;
     } finally {
+      if (isInvalidToken) {
+        localStorage.removeItem(TOKEN_KEY);
+      }
       setLoading(false);
     }
   };
