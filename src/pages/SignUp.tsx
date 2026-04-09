@@ -11,8 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import logo from "@/assets/logo.png";
 import { useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircleIcon } from "lucide-react";
+import { useAlert } from "@/hooks/use-alert";
 import signUpFormSchema from "@/schema/forms/signup";
 import { useForm } from "@tanstack/react-form";
 import {
@@ -22,10 +21,11 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { signUp } from "@/api/user";
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
-  const [error] = useState("");
+  const alert = useAlert();
 
   const form = useForm({
     defaultValues: {
@@ -38,6 +38,25 @@ export default function SignUp() {
     },
     onSubmit: async () => {
       setLoading(true);
+      alert.hide();
+
+      try {
+        const response = await signUp(
+          form.state.values.email,
+          form.state.values.password,
+        );
+
+        if (response.status) {
+          alert.showSuccess(response.message);
+          form.reset();
+        } else {
+          alert.showError(response.message);
+        }
+      } catch {
+        alert.showError("Network error. Please try again later.");
+      }
+
+      setLoading(false);
     },
   });
 
@@ -45,13 +64,7 @@ export default function SignUp() {
     <div className="flex h-screen w-screen items-center justify-center flex-col gap-5">
       <img src={logo} alt="Logo" className="w-24 h-24" />
       <div className="flex flex-col items-center justify-center gap-2 w-full">
-        {error && (
-          <Alert variant="destructive" className="max-w-sm">
-            <AlertCircleIcon />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+        <alert.AlertComponent className="max-w-sm" />
         <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle>Sign up for an account</CardTitle>

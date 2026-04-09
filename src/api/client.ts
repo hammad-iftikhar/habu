@@ -9,4 +9,6 @@ export default axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  // Always resolve the promise, even if the status code is an error
+  validateStatus: () => true,
 });

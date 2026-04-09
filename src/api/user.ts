@@ -18,14 +18,22 @@ export const getUserFromToken = async (
 };
 
 export const signUp = async (email: string, password: string) => {
-  const response = await api.post("/users/sign-up", {
+  const response = await api.post("/users/signup", {
     email,
     password,
   });
 
+  const data = response.data;
+
   if (response.status === 200) {
-    return response.data;
+    return {
+      status: true,
+      message: "Your account has been created successfully. You can login now.",
+    };
   }
 
-  return false;
+  return {
+    status: false,
+    message: data.message,
+  };
 };
