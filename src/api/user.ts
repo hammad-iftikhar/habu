@@ -37,3 +37,25 @@ export const signUp = async (email: string, password: string) => {
     message: data.message,
   };
 };
+
+export const login = async (email: string, password: string) => {
+  const response = await api.post("/users/login", {
+    email,
+    password,
+  });
+
+  const data = response.data;
+
+  if (response.status === 200) {
+    return {
+      status: true,
+      message: "Login successful",
+      token: data.token,
+    };
+  }
+
+  return {
+    status: false,
+    message: data.message,
+  };
+};
