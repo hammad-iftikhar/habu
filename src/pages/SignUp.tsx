@@ -9,65 +9,162 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import logo from "@/assets/logo.png";
+import { useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon } from "lucide-react";
+import signUpFormSchema from "@/schema/forms/signup";
+import { useForm } from "@tanstack/react-form";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 
 export default function SignUp() {
+  const [loading, setLoading] = useState(false);
+  const [error] = useState("");
+
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validators: {
+      onSubmit: signUpFormSchema,
+    },
+    onSubmit: async () => {
+      setLoading(true);
+    },
+  });
+
   return (
     <div className="flex h-screen w-screen items-center justify-center flex-col gap-5">
       <img src={logo} alt="Logo" className="w-24 h-24" />
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Sign up for an account</CardTitle>
-          <CardDescription>Create an account to get started</CardDescription>
-          <CardAction>
-            <Button variant="link">Login</Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  autoComplete="username"
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
+      <div className="flex flex-col items-center justify-center gap-2 w-full">
+        {error && (
+          <Alert variant="destructive" className="max-w-sm">
+            <AlertCircleIcon />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Sign up for an account</CardTitle>
+            <CardDescription>Create an account to get started</CardDescription>
+            <CardAction>
+              <Button variant="link">Login</Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <form
+              id="sign-up-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                form.handleSubmit();
+              }}
+            >
+              <FieldGroup>
+                <form.Field
+                  name="email"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                        <Input
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          aria-invalid={isInvalid}
+                          placeholder="m@example.com"
+                          autoComplete="username"
+                        />
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    );
+                  }}
                 />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
-                <Input
-                  id="password"
-                  autoComplete="new-password"
-                  type="password"
-                  required
+                <form.Field
+                  name="password"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                        <InputGroup>
+                          <InputGroupInput
+                            id={field.name}
+                            name={field.name}
+                            value={field.state.value}
+                            onBlur={field.handleBlur}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            type="password"
+                            aria-invalid={isInvalid}
+                            autoComplete="new-password"
+                          />
+                        </InputGroup>
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    );
+                  }}
                 />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
-                </div>
-                <Input
-                  id="confirm-password"
-                  autoComplete="new-password"
-                  type="password"
-                  required
+                <form.Field
+                  name="confirmPassword"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name}>
+                          Confirm Password
+                        </FieldLabel>
+                        <InputGroup>
+                          <InputGroupInput
+                            id={field.name}
+                            name={field.name}
+                            value={field.state.value}
+                            onBlur={field.handleBlur}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            type="password"
+                            aria-invalid={isInvalid}
+                            autoComplete="new-password"
+                          />
+                        </InputGroup>
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    );
+                  }}
                 />
-              </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Sign Up
-          </Button>
-        </CardFooter>
-      </Card>
+              </FieldGroup>
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <Button
+              type="submit"
+              className="w-full"
+              form="sign-up-form"
+              loading={loading}
+            >
+              Sign Up
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }

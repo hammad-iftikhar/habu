@@ -16,3 +16,16 @@ export const getUserFromToken = async (
 
   return false;
 };
+
+export const signUp = async (email: string, password: string) => {
+  const response = await api.post("/users/sign-up", {
+    email,
+    password,
+  });
+
+  if (response.status === 200) {
+    return response.data;
+  }
+
+  return false;
+};
