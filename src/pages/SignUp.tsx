@@ -22,10 +22,12 @@ import {
 } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { signUp } from "@/api/user";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const alert = useAlert();
+  const navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {
@@ -70,7 +72,9 @@ export default function SignUp() {
             <CardTitle>Sign up for an account</CardTitle>
             <CardDescription>Create an account to get started</CardDescription>
             <CardAction>
-              <Button variant="link">Login</Button>
+              <Button variant="link" onClick={() => navigate("/login")}>
+                Login
+              </Button>
             </CardAction>
           </CardHeader>
           <CardContent>

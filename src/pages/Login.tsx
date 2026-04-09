@@ -11,8 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import logo from "@/assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex h-screen w-screen items-center justify-center flex-col gap-5">
       <img src={logo} alt="Logo" className="w-24 h-24" />
@@ -23,7 +26,9 @@ export default function Login() {
             Enter your credentials below to login to your account
           </CardDescription>
           <CardAction>
-            <Button variant="link">Sign Up</Button>
+            <Button variant="link" onClick={() => navigate("/signup")}>
+              Sign Up
+            </Button>
           </CardAction>
         </CardHeader>
         <CardContent>
