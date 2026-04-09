@@ -23,6 +23,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { TOKEN_KEY } from "@/data/constants";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -48,8 +49,9 @@ export default function Login() {
         );
 
         if (response.status) {
-          alert.showSuccess(response.message);
           form.reset();
+          localStorage.setItem(TOKEN_KEY, response.token);
+          navigate("/");
         } else {
           alert.showError(response.message);
         }
@@ -64,93 +66,96 @@ export default function Login() {
   return (
     <div className="flex h-screen w-screen items-center justify-center flex-col gap-5">
       <img src={logo} alt="Logo" className="w-24 h-24" />
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your credentials below to login to your account
-          </CardDescription>
-          <CardAction>
-            <Button variant="link" onClick={() => navigate("/signup")}>
-              Sign Up
-            </Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form
-            id="login-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
-          >
-            <FieldGroup>
-              <form.Field
-                name="email"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="m@example.com"
-                        autoComplete="username"
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  );
-                }}
-              />
-              <form.Field
-                name="password"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                      <InputGroup>
-                        <InputGroupInput
+      <div className="flex flex-col items-center justify-center gap-2 w-full">
+        <alert.AlertComponent className="max-w-sm" />
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Login to your account</CardTitle>
+            <CardDescription>
+              Enter your credentials below to login to your account
+            </CardDescription>
+            <CardAction>
+              <Button variant="link" onClick={() => navigate("/signup")}>
+                Sign Up
+              </Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <form
+              id="login-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                form.handleSubmit();
+              }}
+            >
+              <FieldGroup>
+                <form.Field
+                  name="email"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                        <Input
                           id={field.name}
                           name={field.name}
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          type="password"
                           aria-invalid={isInvalid}
-                          autoComplete="password"
+                          placeholder="m@example.com"
+                          autoComplete="username"
                         />
-                      </InputGroup>
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  );
-                }}
-              />
-            </FieldGroup>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button
-            type="submit"
-            form="login-form"
-            disabled={loading}
-            className="w-full"
-          >
-            Login
-          </Button>
-        </CardFooter>
-      </Card>
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    );
+                  }}
+                />
+                <form.Field
+                  name="password"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                        <InputGroup>
+                          <InputGroupInput
+                            id={field.name}
+                            name={field.name}
+                            value={field.state.value}
+                            onBlur={field.handleBlur}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            type="password"
+                            aria-invalid={isInvalid}
+                            autoComplete="password"
+                          />
+                        </InputGroup>
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    );
+                  }}
+                />
+              </FieldGroup>
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <Button
+              type="submit"
+              form="login-form"
+              disabled={loading}
+              className="w-full"
+            >
+              Login
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }
