@@ -51,7 +51,7 @@ export default function Login() {
         if (response.status) {
           form.reset();
           localStorage.setItem(TOKEN_KEY, response.token);
-          navigate("/");
+          navigate("/dashboard");
         } else {
           alert.showError(response.message);
         }
