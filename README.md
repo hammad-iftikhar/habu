@@ -9,6 +9,7 @@ A web-based budget management application to help users track expenses, set goal
 - Vite 8
 - React Router 7
 - Axios
+- Shadcn ui
 - Tailwind CSS 4
 - Zod + TanStack React Form
 
@@ -24,9 +25,15 @@ src/
     ...
   data/                  # Constant data for project
     ...
+  hooks/                 # React hooks
+    ...
+  lib/                   # Helper functions
+    ...
   pages/                 # Application pages
     ...
   schema/                # Schemas for forms etc.
+    ...
+  types/                 # Typescript types
     ...
 ```
 
