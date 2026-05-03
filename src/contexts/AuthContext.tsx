@@ -7,7 +7,10 @@ import FullScreenSpinner from "@/components/full-screen-spinner";
 interface IAuthContext {
   user: IUser | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<{ status: boolean; message: string }>;
+  login: (
+    email: string,
+    password: string,
+  ) => Promise<{ status: boolean; message: string }>;
   logout: () => Promise<void>;
 }
 
@@ -49,13 +52,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     checkIfLoggedIn();
   }, []);
 
-  const logout = async () => {};
+  const logout = async () => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      await userApi.logout(token);
+      localStorage.removeItem(TOKEN_KEY);
+      setUser(null);
+    }
+  };
 
   const login = async (email: string, password: string) => {
     const response = await userApi.login(email, password);
     if (response.status) {
       localStorage.setItem(TOKEN_KEY, response.token);
-      // const userData = await getUserFromToken(response.token);
       setUser(response.user);
     }
     return { status: response.status, message: response.message };

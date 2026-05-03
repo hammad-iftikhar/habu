@@ -60,3 +60,23 @@ export const login = async (email: string, password: string) => {
     message: data.message,
   };
 };
+
+export const logout = async (token: string) => {
+  const resonse = await api.post("/users/logout", undefined, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (resonse.status === 200) {
+    return {
+      status: true,
+      message: "Logout successful",
+    };
+  }
+
+  return {
+    status: false,
+    message: "Logout failed",
+  };
+};

@@ -24,31 +24,41 @@ export function useAlert() {
     setState({ ...options, visible: true });
   }, []);
 
-  const showError = useCallback((message: string, title: string = "Error") => {
-    show({ message, title, variant: "destructive" });
-  }, [show]);
+  const showError = useCallback(
+    (message: string, title: string = "Error") => {
+      show({ message, title, variant: "destructive" });
+    },
+    [show],
+  );
 
-  const showSuccess = useCallback((message: string, title: string = "Success") => {
-    show({ message, title, variant: "default" });
-  }, [show]);
+  const showSuccess = useCallback(
+    (message: string, title: string = "Success") => {
+      show({ message, title, variant: "default" });
+    },
+    [show],
+  );
 
   const hide = useCallback(() => {
     setState((prev) => ({ ...prev, visible: false }));
   }, []);
 
-  const AlertComponent = useCallback(({ className }: { className?: string }) => {
-    if (!state.visible) return null;
+  const AlertComponent = useCallback(
+    ({ className }: { className?: string }) => {
+      if (!state.visible) return null;
 
-    const Icon = state.variant === "destructive" ? AlertCircleIcon : CheckCircle2Icon;
+      const Icon =
+        state.variant === "destructive" ? AlertCircleIcon : CheckCircle2Icon;
 
-    return (
-      <Alert variant={state.variant} className={cn(className)}>
-        <Icon className="h-4 w-4" />
-        {state.title && <AlertTitle>{state.title}</AlertTitle>}
-        <AlertDescription>{state.message}</AlertDescription>
-      </Alert>
-    );
-  }, [state]);
+      return (
+        <Alert variant={state.variant} className={cn(className)}>
+          <Icon className="h-4 w-4" />
+          {state.title && <AlertTitle>{state.title}</AlertTitle>}
+          <AlertDescription>{state.message}</AlertDescription>
+        </Alert>
+      );
+    },
+    [state],
+  );
 
   return {
     show,
