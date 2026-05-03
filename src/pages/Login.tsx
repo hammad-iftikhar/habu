@@ -15,7 +15,7 @@ import { useForm } from "@tanstack/react-form";
 import loginFormSchema from "@/schema/forms/login";
 import { useState } from "react";
 import { useAlert } from "@/hooks/use-alert";
-import { login } from "@/api/user";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Field,
   FieldError,
@@ -23,11 +23,11 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
-import { TOKEN_KEY } from "@/data/constants";
 
 export default function Login() {
   const navigate = useNavigate();
   const alert = useAlert();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const form = useForm({
@@ -50,7 +50,6 @@ export default function Login() {
 
         if (response.status) {
           form.reset();
-          localStorage.setItem(TOKEN_KEY, response.token);
           navigate("/dashboard");
         } else {
           alert.showError(response.message);

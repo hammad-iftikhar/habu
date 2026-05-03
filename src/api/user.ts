@@ -51,6 +51,7 @@ export const login = async (email: string, password: string) => {
       status: true,
       message: "Login successful",
       token: data.token,
+      user: data.user,
     };
   }
 
